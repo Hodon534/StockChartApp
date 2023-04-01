@@ -9,6 +9,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+
+/**
+ * Make a request from TwelveData and return POJO object of Time Series
+ */
 @RestController
 public class GetStockQuery {
 

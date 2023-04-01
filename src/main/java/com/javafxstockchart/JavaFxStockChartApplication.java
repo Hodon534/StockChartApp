@@ -13,16 +13,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Application that will show stock charts and randomly dictate whether you should buy or sell
- * Frameworks used: JavaFX, SpringBoot,SQL
+ * JavaFX, SpringBoot
  * FXML, Lombok, Jackson
+ * MySQL
  */
 
-//todo Controller Skeleton - check how to open in Scene Builder via IntelliJ - Done
 
 /**
  * Service - Application's logic, all changes, database connecting
  * Controller - View/UI
- * Models
+ * Models - POJOs & api creation
  * Repository - strictly connected to models
  */
 

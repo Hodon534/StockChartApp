@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
  * Demo link from site -> https://api.twelvedata.com/time_series?symbol=AAPL&interval=1min&apikey=demo&source=docs
  */
 
+/**
+ * POJO of TimeSeries Request
+ */
 @Component
 public class StockQueryLinkCreator {
     public static final String TWELVE_DATA_BASE_LINK = "https://api.twelvedata.com/";

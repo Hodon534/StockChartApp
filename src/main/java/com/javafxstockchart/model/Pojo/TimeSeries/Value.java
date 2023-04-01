@@ -1,9 +1,15 @@
 package com.javafxstockchart.model.Pojo.TimeSeries;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 
-@Data
+/**
+ * POJO of single Query (Daily, Weekly, Monthly)
+ */
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Value {
     @JsonProperty("datetime")
     private String dateTime;

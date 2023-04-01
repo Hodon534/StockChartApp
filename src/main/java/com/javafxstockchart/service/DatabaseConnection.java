@@ -2,8 +2,14 @@ package com.javafxstockchart.service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 
+/**
+ * Connect to local MySQL database
+ * Url = 'jdbc:mysql://localhost:3306/'
+ * Database = 'companies'
+ * UserName = 'Hodon'
+ * Password = 'Root1234'
+ */
 public class DatabaseConnection {
 
     public static Connection getConnection(){

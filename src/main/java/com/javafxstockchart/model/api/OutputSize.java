@@ -1,5 +1,8 @@
 package com.javafxstockchart.model.api;
 
+/**
+ * Output Size = size of request from TwelveData
+ */
 public enum OutputSize implements ApiConstructor{
     OUTPUT_SIZE(5000);
 

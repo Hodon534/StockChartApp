@@ -1,11 +1,14 @@
 package com.javafxstockchart.model.Pojo.TimeSeries;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 @Component
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PojoTimeSeries {
     @JsonProperty("meta")
     private MetaData metaData;

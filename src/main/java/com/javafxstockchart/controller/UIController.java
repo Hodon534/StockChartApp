@@ -2,14 +2,9 @@ package com.javafxstockchart.controller;
 
 import com.javafxstockchart.model.Pojo.TimeSeries.PojoTimeSeries;
 import com.javafxstockchart.model.Pojo.TimeSeries.Value;
-import com.javafxstockchart.model.tickers.CompanySearch;
+import com.javafxstockchart.model.tickers.Company;
 import com.javafxstockchart.service.DatabaseConnection;
 import com.javafxstockchart.service.GetStockQuery;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.CategoryAxis;
@@ -17,8 +12,6 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import org.springframework.stereotype.Controller;
@@ -36,7 +29,7 @@ public class UIController implements Initializable {
     @FXML
     private AnchorPane anchorPane;
     @FXML
-    private ChoiceBox<String> spanChoiceBox;
+    private ChoiceBox<String> intervalChoiceBox;
     @FXML
     private ChoiceBox<String> periodChoiceBox;
     @FXML
@@ -46,69 +39,43 @@ public class UIController implements Initializable {
     @FXML
     private Label labelYamahaSays;
     @FXML
-    private ListView<String> listView;
-    @FXML
     private TextField textField;
     @FXML
     private Button goButton;
     @FXML
-    private TableColumn<CompanySearch, String> nameColumn;
+    private TableColumn<Company, String> companyNameColumn;
     @FXML
-    private TableColumn<CompanySearch, String> symbolColumn;
+    private TableColumn<Company, String> companySymbolColumn;
     @FXML
-    private TableView<CompanySearch> tableView;
+    private TableView<Company> companyTableView;
     private PojoTimeSeries chartData;
-    ObservableList<CompanySearch> companySearchObservableList = FXCollections.observableArrayList();
-
     private final String[] spanBetweenRecords = {"1day", "1week", "1month"};
     private final String[] periodOfQueries = {"Max", "10 years", "5 years", "3 years", "1 year", "YTD"};
-    private final String[] testTickers = {"TSLA", "MSFT", "PARA", "META"};
 
     public UIController() {
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        spanChoiceBox.getItems().addAll(spanBetweenRecords);
-        spanChoiceBox.setValue("1week");
+        intervalChoiceBox.getItems().addAll(spanBetweenRecords);
+        intervalChoiceBox.setValue("1week");
         periodChoiceBox.getItems().addAll(periodOfQueries);
         periodChoiceBox.setValue("Max");
-        listView.getItems().addAll(testTickers);
         lineChart.setCreateSymbols(false);
         lineChart.setLegendVisible(false);
-        /*listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                textField.setText(listView.getSelectionModel().getSelectedItem());
-            }
-        });*/
-        tableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<CompanySearch>() {
-            @Override
-            public void changed(ObservableValue<? extends CompanySearch> observableValue, CompanySearch companySearch, CompanySearch t1) {
-                textField.setText(listView.getSelectionModel().getSelectedItem());
-            }
-        });
+
         String companyQuery = "SELECT symbol, name FROM tickers";
         try {
             Connection conn = DatabaseConnection.getConnection();
             Statement statement = conn.createStatement();;
             ResultSet queryOutput = statement.executeQuery(companyQuery);
 
-            while(queryOutput.next()) {
-                companySearchObservableList.add(new CompanySearch(queryOutput.getString("symbol"), queryOutput.getString("name")));
-            }
 
-            symbolColumn.setCellValueFactory(new PropertyValueFactory<>("symbol"));
-            nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-            tableView.setItems(companySearchObservableList);
-            FilteredList<CompanySearch> filteredCompanyData = new FilteredList<>(companySearchObservableList, value -> true);
-            textField.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            });
         } catch(SQLException e) {
             e.printStackTrace();
         }
+
+
     }
 
     /**
@@ -119,10 +86,10 @@ public class UIController implements Initializable {
     }
 
     /**
-     * Function / Span -> "Daily/Weekly"/"Monthly"
+     * Interval -> "Daily/Weekly"/"Monthly"
      */
-    private String getSpanValue() {
-        return spanChoiceBox.getValue();
+    private String getIntervalValue() {
+        return intervalChoiceBox.getValue();
     }
 
     @FXML
@@ -133,14 +100,8 @@ public class UIController implements Initializable {
         setAxisLineChart();
     }
 
-    public void textFieldResponsiveSearch() throws IOException{
-        //GetSymbols.requestData(getTextFieldValue());
-    }
-
-
-
     public void setChartData() throws IOException {
-        chartData = GetStockQuery.requestData(getSpanValue(), getTextFieldValue());
+        chartData = GetStockQuery.requestData(getIntervalValue(), getTextFieldValue());
     }
 
     public void setLineChartTitle() {
@@ -154,7 +115,6 @@ public class UIController implements Initializable {
             }
         return series;
         }
-
 
     public void setAxisLineChart(){
         String startDate = chartData.getValues()[0].getDateTime();
@@ -176,11 +136,6 @@ public class UIController implements Initializable {
     public void resetChartDataAndLineChart(){
         chartData = new PojoTimeSeries();
         lineChart.getData().clear();
-
     }
 
-    @FXML
-    void textFieldResponsiveSearch(KeyEvent event) {
-
-    }
 }
