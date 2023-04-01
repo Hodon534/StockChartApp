@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javafxstockchart.model.Pojo.TimeSeries.PojoTimeSeries;
 
 public class ParseJsonToSymbolList {
-    private static ObjectMapper objectMapper = createMapper();
+    private static final ObjectMapper objectMapper = createMapper();
     private static ObjectMapper createMapper(){
         ObjectMapper initialObjectMapper = new ObjectMapper();
         initialObjectMapper.findAndRegisterModules();
@@ -14,8 +14,7 @@ public class ParseJsonToSymbolList {
     }
 
     public static PojoTimeSeries parseJsonToObject(String input) throws IOException {
-        PojoTimeSeries pojo = objectMapper.readValue(input, PojoTimeSeries.class);
-        return pojo;
+        return objectMapper.readValue(input, PojoTimeSeries.class);
     }
 }
 
