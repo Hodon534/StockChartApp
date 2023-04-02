@@ -25,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.w3c.dom.events.MouseEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -138,10 +139,10 @@ public class UIController implements Initializable {
         intervalChoiceBox.setValue("1week");
     }
 
-    private void periodChoiceBoxInitialization() {
+    /*private void periodChoiceBoxInitialization() {
         periodChoiceBox.getItems().addAll(periodOfQueries);
         periodChoiceBox.setValue("Max");
-    }
+    }*/
 
     private void lineChartInitialization() {
         lineChart.setCreateSymbols(false);
@@ -189,12 +190,12 @@ public class UIController implements Initializable {
 
     public void setAxisLineChart(){
 
-        Double minValue = 0.0;
-        Value biggestValue = Arrays.stream(chartData.getValues()).max(Comparator.comparingDouble(Value::getClose)).orElseThrow(NoSuchElementException::new);
-        Double maxValue = biggestValue.getClose() + (biggestValue.getClose()*0.15);
+        //Double minValue = 0.0;
+        //Value biggestValue = Arrays.stream(chartData.getValues()).max(Comparator.comparingDouble(Value::getClose)).orElseThrow(NoSuchElementException::new);
+        //Double maxValue = biggestValue.getClose() + (biggestValue.getClose()*0.15);
         //int ySeparator = (int) (maxValue/7);
 
-        CategoryAxis xAxis = new CategoryAxis();
+        //CategoryAxis xAxis = new CategoryAxis();
         //NumberAxis yAxis = new NumberAxis(minValue, maxValue, ySeparator);
         //xAxis.setTickLabelsVisible(false);
         lineChart.getXAxis().setTickLabelsVisible(false);
@@ -227,16 +228,5 @@ public class UIController implements Initializable {
             }
     }
 
-    public void setLineChartDuration(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
-        formatter = formatter.withLocale(Locale.GERMANY);  // Locale specifies human language for translating, and cultural norms for lowercase/uppercase and abbreviations and such. Example: Locale.US or Locale.CANADA_FRENCH
-        LocalDate date = LocalDate.parse(chartData.getValues()[0].getDateTime(), formatter);
-        //LocalDate startDate = chartData.getValues()[0].getDateTime();
-    }
-/*
-    private double rateOfReturn(){
-        double startValue = chartData.getValues()[0].getOpen();
-        double endValue = chartData.getValues()[chartData.getValues().length-1].getClose();
 
-    }*/
 }

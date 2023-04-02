@@ -13,9 +13,9 @@ import lombok.*;
 public class Value {
     @JsonProperty("datetime")
     private String dateTime;
-    private Double open;
-    private Double high;
-    private Double low;
-    private Double close;
-    private Long volume;
+    private double open;
+    private double high;
+    private double low;
+    private double close;
+    private long volume;
 }
