@@ -5,6 +5,6 @@ package com.javafxstockchart.model.api;
  */
 public interface ApiConstructor {
 
-    public String getValue();
-    public String getKey();
+    String getValue();
+    String getKey();
 }

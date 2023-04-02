@@ -2,6 +2,7 @@ package com.javafxstockchart.service;
 
 import com.javafxstockchart.model.Pojo.TimeSeries.PojoTimeSeries;
 import com.javafxstockchart.model.Pojo.TimeSeries.StockQueryLinkCreator;
+import com.javafxstockchart.repository.ParseJsonToPOJO;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.Scanner;
  * Make a request from TwelveData and return POJO object of Time Series
  */
 @RestController
-public class GetStockQuery {
+public class GetTimeSeriesJSON {
 
     public static PojoTimeSeries requestData(String interval, String symbol) throws IOException {
         StockQueryLinkCreator stockQueryLinkCreator = new StockQueryLinkCreator();
@@ -33,7 +34,7 @@ public class GetStockQuery {
                 requestOutput.append(scanner.nextLine());
             }
             scanner.close(); //
-            return ParseJsonToSymbolList.parseJsonToObject(requestOutput.toString());
+            return ParseJsonToPOJO.parseJsonToObject(requestOutput.toString());
         }
     }
 

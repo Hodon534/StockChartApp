@@ -1,30 +1,31 @@
 package com.javafxstockchart;
 
-import com.javafxstockchart.service.DatabaseConnection;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import java.util.Objects;
 
 /**
  * Application that will show stock charts and randomly dictate whether you should buy or sell
  * JavaFX, SpringBoot
  * FXML, Lombok, Jackson
  * MySQL
- */
-
-
-/**
+ * ---
  * Service - Application's logic, all changes, database connecting
  * Controller - View/UI
  * Models - POJOs & api creation
  * Repository - strictly connected to models
  */
+
+//todo: ROR, Time length selection, Warren Buffet's predictions
 
 @SpringBootApplication
 public class JavaFxStockChartApplication extends Application {
@@ -42,7 +43,9 @@ public class JavaFxStockChartApplication extends Application {
 	public void start(Stage stage) throws Exception {
 		fxmlLoader.setLocation(getClass().getResource("/ui.fxml")); //Set location of FXML file
 		Parent root = fxmlLoader.load();
-		stage.setTitle("Market Chart App");
+		stage.setTitle("Stock Chart App");
+		Image appIcon = new Image(Objects.requireNonNull(JavaFxStockChartApplication.class.getResourceAsStream("/images/icon.png")));
+		stage.getIcons().add(appIcon);
 		Scene scene = new Scene(root, 1000, 800);
 		stage.setScene(scene);
 		stage.show();
@@ -60,4 +63,6 @@ public class JavaFxStockChartApplication extends Application {
 		confAppContext.stop();
 		Platform.exit();
 	}
+
+
 }

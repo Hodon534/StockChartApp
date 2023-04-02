@@ -1,10 +1,17 @@
 package com.javafxstockchart.controller;
 
+import com.javafxstockchart.model.OracleFromYamaha;
 import com.javafxstockchart.model.Pojo.TimeSeries.PojoTimeSeries;
 import com.javafxstockchart.model.Pojo.TimeSeries.Value;
 import com.javafxstockchart.model.tickers.Company;
 import com.javafxstockchart.service.DatabaseConnection;
-import com.javafxstockchart.service.GetStockQuery;
+import com.javafxstockchart.service.GetTimeSeriesJSON;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.CategoryAxis;
@@ -12,9 +19,11 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.SimpleRouteMatcher;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,34 +57,92 @@ public class UIController implements Initializable {
     private TableColumn<Company, String> companySymbolColumn;
     @FXML
     private TableView<Company> companyTableView;
+    @FXML
+    private Label yamahaDecisionLabel;
+    private final ObservableList<Company> observableList = FXCollections.observableArrayList();
     private PojoTimeSeries chartData;
     private final String[] spanBetweenRecords = {"1day", "1week", "1month"};
     private final String[] periodOfQueries = {"Max", "10 years", "5 years", "3 years", "1 year", "YTD"};
+
+    OracleFromYamaha oracleFromYamaha;
 
     public UIController() {
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        intervalChoiceBox.getItems().addAll(spanBetweenRecords);
-        intervalChoiceBox.setValue("1week");
-        periodChoiceBox.getItems().addAll(periodOfQueries);
-        periodChoiceBox.setValue("Max");
-        lineChart.setCreateSymbols(false);
-        lineChart.setLegendVisible(false);
+        intervalChoiceBoxInitialization();
+        periodChoiceBoxInitialization();
+        lineChartInitialization();
+        tableViewInitialization();
+        /*companyTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Company>() {
+            @Override
+            public void changed(ObservableValue<? extends Company> observableValue, Company company, Company t1) {
+                //String clickedCompanySymbol = companyTableView.getSelectionModel().getSelectedItem().getSymbol();
+                textField.setText(companyTableView.getSelectionModel().getSelectedItem().getSymbol());
+            }
+        });*/
+    }
 
+    private void tableViewInitialization(){
         String companyQuery = "SELECT symbol, name FROM tickers";
         try {
+            //make a db connection
             Connection conn = DatabaseConnection.getConnection();
             Statement statement = conn.createStatement();;
+            //get data from db
             ResultSet queryOutput = statement.executeQuery(companyQuery);
 
+            while (queryOutput.next()) {
+                //add values to observableList one by one -> Company values (symbol & name)
+                observableList.add(new Company(queryOutput.getString("symbol"), queryOutput.getString("name")));
+            }
+            // initialize columns on TableView
+            companySymbolColumn.setCellValueFactory(new PropertyValueFactory<>("symbol"));
+            companyNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+            // put Companies on TableView via observableList
+            companyTableView.setItems(observableList);
+            // create FilteredList that takes ObservableList as it's argument
+            FilteredList<Company> filteredList = new FilteredList<>(observableList, a -> true);
 
+            textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredList.setPredicate(Company -> {
+                    if (newValue.isEmpty() || newValue.isBlank()) {
+                        return true; // if textField is empty  = nothing happens
+                    }
+                    // value from TextField that has just been typed
+                    String searchKeyword = newValue.toLowerCase();
+
+                    if(Company.getName().toLowerCase().contains(searchKeyword)) {
+                        return true; // found matching value in "name" column
+                    } else if (Company.getSymbol().toLowerCase().contains(searchKeyword)) {
+                        return true; // found matching value in "symbol" column
+                    } else {
+                        return false; // nothing's matching
+                    }
+                });
+            });
+            SortedList<Company> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(companyTableView.comparatorProperty());
+            companyTableView.setItems(sortedList);
         } catch(SQLException e) {
             e.printStackTrace();
         }
+    }
 
+    private void intervalChoiceBoxInitialization() {
+        intervalChoiceBox.getItems().addAll(spanBetweenRecords);
+        intervalChoiceBox.setValue("1week");
+    }
 
+    private void periodChoiceBoxInitialization() {
+        periodChoiceBox.getItems().addAll(periodOfQueries);
+        periodChoiceBox.setValue("Max");
+    }
+
+    private void lineChartInitialization() {
+        lineChart.setCreateSymbols(false);
+        lineChart.setLegendVisible(false);
     }
 
     /**
@@ -101,7 +168,7 @@ public class UIController implements Initializable {
     }
 
     public void setChartData() throws IOException {
-        chartData = GetStockQuery.requestData(getIntervalValue(), getTextFieldValue());
+        chartData = GetTimeSeriesJSON.requestData(getIntervalValue(), getTextFieldValue());
     }
 
     public void setLineChartTitle() {
@@ -136,6 +203,13 @@ public class UIController implements Initializable {
     public void resetChartDataAndLineChart(){
         chartData = new PojoTimeSeries();
         lineChart.getData().clear();
+    }
+
+    public void setLabelYamahaSays(){
+        oracleFromYamaha.setDecisionWhetherBuyOrSell();
+        if (oracleFromYamaha.toString().equals("BUY")) {
+            labelYamahaSays.setStyle("-fx-font: normal bold 20px 'System Bold' ");
+        }
     }
 
 }

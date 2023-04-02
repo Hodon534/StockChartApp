@@ -3,6 +3,7 @@ package com.javafxstockchart.service;
 import com.javafxstockchart.model.Pojo.TimeSeries.MetaData;
 import com.javafxstockchart.model.Pojo.TimeSeries.PojoTimeSeries;
 import com.javafxstockchart.model.Pojo.TimeSeries.Value;
+import com.javafxstockchart.repository.ParseJsonToPOJO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ParseJsonToSymbolListTest {
+class ParseJsonToPOJOTest {
     /**
      * example of JSON from Twelve API
      * parameters:
@@ -113,7 +114,7 @@ class ParseJsonToSymbolListTest {
     @Test
     void parseJsonToObject() throws IOException {
         //given
-        PojoTimeSeries pojo = ParseJsonToSymbolList.parseJsonToObject(stringToParse);
+        PojoTimeSeries pojo = ParseJsonToPOJO.parseJsonToObject(stringToParse);
         MetaData metaData = pojo.getMetaData();
         Value firstValuePojo = pojo.getValues()[0];
         Value secondValuePojo = pojo.getValues()[1];
