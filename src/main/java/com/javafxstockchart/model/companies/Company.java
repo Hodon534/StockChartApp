@@ -1,4 +1,4 @@
-package com.javafxstockchart.model.tickers;
+package com.javafxstockchart.model.companies;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

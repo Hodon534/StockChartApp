@@ -19,6 +19,7 @@ module stockchart {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires org.json;
+    requires annotations;
 
     exports com.javafxstockchart;
     exports com.javafxstockchart.service to spring.beans;
@@ -29,8 +30,8 @@ module stockchart {
     opens com.javafxstockchart.model.api to javafx.graphics, spring.core;
     exports com.javafxstockchart.model.Pojo.TimeSeries;
     opens com.javafxstockchart.model.Pojo.TimeSeries to javafx.graphics, spring.core, com.fasterxml.jackson.databind;
-    opens com.javafxstockchart.model.tickers;
-    exports com.javafxstockchart.model.tickers to spring.beans, javafx.base, javafx.fxml, javafx.graphics;
+    opens com.javafxstockchart.model.companies;
+    exports com.javafxstockchart.model.companies to spring.beans, javafx.base, javafx.fxml, javafx.graphics;
     exports com.javafxstockchart.repository to spring.beans;
     exports com.javafxstockchart.model to spring.beans;
 }

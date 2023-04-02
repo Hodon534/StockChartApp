@@ -32,7 +32,7 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <Label fx:id="labelRateOfReturn" text="Rate of Return" GridPane.columnIndex="1">
+            <Label fx:id="labelRateOfReturn" text="Rate of Return" visible="false" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
@@ -47,7 +47,7 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <ChoiceBox fx:id="periodChoiceBox" prefWidth="80.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
+            <ChoiceBox fx:id="periodChoiceBox" prefWidth="80.0" visible="false" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
@@ -66,7 +66,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Label fx:id="yamahaDecisionLabel" alignment="TOP_LEFT" contentDisplay="TOP" textAlignment="CENTER" textFill="#39b517" textOverrun="CLIP" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+            <Label fx:id="yamahaDecisionLabel" alignment="TOP_LEFT" contentDisplay="TOP" text=" " textAlignment="CENTER" textOverrun="CLIP" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="100.0" />
                </GridPane.margin>

@@ -25,7 +25,7 @@ import java.util.Objects;
  * Repository - strictly connected to models
  */
 
-//todo: ROR, Time length selection, Warren Buffet's predictions
+//todo: ROR, Time length selection
 
 @SpringBootApplication
 public class JavaFxStockChartApplication extends Application {

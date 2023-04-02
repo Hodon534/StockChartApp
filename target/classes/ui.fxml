@@ -3,7 +3,9 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.javafxstockchart.controller.UIController">
    <children>
@@ -30,12 +32,12 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <Label fx:id="labelRateOfReturn" text="Rate of Return" GridPane.columnIndex="1">
+            <Label fx:id="labelRateOfReturn" text="Rate of Return" visible="false" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="labelYamahaSays" text="Oracle from Yamaha says..." GridPane.columnIndex="2">
+            <Label fx:id="labelYamahaSays" text="Oracle from Yamaha says" GridPane.columnIndex="2">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
@@ -45,7 +47,7 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <ChoiceBox fx:id="periodChoiceBox" prefWidth="80.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
+            <ChoiceBox fx:id="periodChoiceBox" prefWidth="80.0" visible="false" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
@@ -64,6 +66,17 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
+            <Label fx:id="yamahaDecisionLabel" alignment="TOP_LEFT" contentDisplay="TOP" text=" " textAlignment="CENTER" textOverrun="CLIP" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+               <GridPane.margin>
+                  <Insets right="100.0" />
+               </GridPane.margin>
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <effect>
+                  <Blend />
+               </effect>
+            </Label>
          </children>
       </GridPane>
    </children>

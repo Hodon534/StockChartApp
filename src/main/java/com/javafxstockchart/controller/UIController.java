@@ -3,7 +3,7 @@ package com.javafxstockchart.controller;
 import com.javafxstockchart.model.OracleFromYamaha;
 import com.javafxstockchart.model.Pojo.TimeSeries.PojoTimeSeries;
 import com.javafxstockchart.model.Pojo.TimeSeries.Value;
-import com.javafxstockchart.model.tickers.Company;
+import com.javafxstockchart.model.companies.Company;
 import com.javafxstockchart.service.DatabaseConnection;
 import com.javafxstockchart.service.GetTimeSeriesJSON;
 import javafx.beans.value.ChangeListener;
@@ -22,13 +22,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.SimpleRouteMatcher;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -64,6 +66,7 @@ public class UIController implements Initializable {
     private final String[] spanBetweenRecords = {"1day", "1week", "1month"};
     private final String[] periodOfQueries = {"Max", "10 years", "5 years", "3 years", "1 year", "YTD"};
 
+    @Autowired
     OracleFromYamaha oracleFromYamaha;
 
     public UIController() {
@@ -72,14 +75,14 @@ public class UIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         intervalChoiceBoxInitialization();
-        periodChoiceBoxInitialization();
+        /*periodChoiceBoxInitialization();*/
         lineChartInitialization();
         tableViewInitialization();
         /*companyTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Company>() {
             @Override
             public void changed(ObservableValue<? extends Company> observableValue, Company company, Company t1) {
-                //String clickedCompanySymbol = companyTableView.getSelectionModel().getSelectedItem().getSymbol();
-                textField.setText(companyTableView.getSelectionModel().getSelectedItem().getSymbol());
+                String clickedCompanySymbol = companyTableView.getSelectionModel().getSelectedItem().getSymbol();
+                textField.setText(clickedCompanySymbol);
             }
         });*/
     }
@@ -89,7 +92,7 @@ public class UIController implements Initializable {
         try {
             //make a db connection
             Connection conn = DatabaseConnection.getConnection();
-            Statement statement = conn.createStatement();;
+            Statement statement = conn.createStatement();
             //get data from db
             ResultSet queryOutput = statement.executeQuery(companyQuery);
 
@@ -165,6 +168,7 @@ public class UIController implements Initializable {
         setChartData();
         setLineChartTitle();
         setAxisLineChart();
+        setYamahaDecisionLabel();
     }
 
     public void setChartData() throws IOException {
@@ -184,32 +188,55 @@ public class UIController implements Initializable {
         }
 
     public void setAxisLineChart(){
-        String startDate = chartData.getValues()[0].getDateTime();
-        String endDate = chartData.getValues()[chartData.getValues().length-1].getDateTime();
+
         Double minValue = 0.0;
-        HashMap<LocalDate, Double> closingMap = new HashMap<>();
         Value biggestValue = Arrays.stream(chartData.getValues()).max(Comparator.comparingDouble(Value::getClose)).orElseThrow(NoSuchElementException::new);
         Double maxValue = biggestValue.getClose() + (biggestValue.getClose()*0.15);
-        int ySeparator = (int) (maxValue/7);
+        //int ySeparator = (int) (maxValue/7);
 
         CategoryAxis xAxis = new CategoryAxis();
-        NumberAxis yAxis = new NumberAxis(minValue, maxValue, ySeparator);
-        xAxis.setTickLabelsVisible(false);
+        //NumberAxis yAxis = new NumberAxis(minValue, maxValue, ySeparator);
+        //xAxis.setTickLabelsVisible(false);
         lineChart.getXAxis().setTickLabelsVisible(false);
         lineChart.getXAxis().setOpacity(0);
         lineChart.getData().add(setXYChart());
     }
-
     public void resetChartDataAndLineChart(){
         chartData = new PojoTimeSeries();
         lineChart.getData().clear();
     }
 
-    public void setLabelYamahaSays(){
+    public void setYamahaDecisionLabel(){
+        changeTextValueOfYamahaDecisionLabel();
+        changeColorOfYamahaDecisionLabel();
+        }
+    public void changeTextValueOfYamahaDecisionLabel() {
         oracleFromYamaha.setDecisionWhetherBuyOrSell();
         if (oracleFromYamaha.toString().equals("BUY")) {
-            labelYamahaSays.setStyle("-fx-font: normal bold 20px 'System Bold' ");
+            yamahaDecisionLabel.setText(oracleFromYamaha.toString());
+        } else if (oracleFromYamaha.toString().equals("SELL")) {
+            yamahaDecisionLabel.setText(oracleFromYamaha.toString());
         }
     }
 
+    public void changeColorOfYamahaDecisionLabel() {
+            if (yamahaDecisionLabel.getText().equals("BUY")) {
+                yamahaDecisionLabel.setTextFill(Color.GREEN);
+            } else if (yamahaDecisionLabel.getText().equals("SELL")) {
+                yamahaDecisionLabel.setTextFill(Color.RED);
+            }
+    }
+
+    public void setLineChartDuration(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+        formatter = formatter.withLocale(Locale.GERMANY);  // Locale specifies human language for translating, and cultural norms for lowercase/uppercase and abbreviations and such. Example: Locale.US or Locale.CANADA_FRENCH
+        LocalDate date = LocalDate.parse(chartData.getValues()[0].getDateTime(), formatter);
+        //LocalDate startDate = chartData.getValues()[0].getDateTime();
+    }
+/*
+    private double rateOfReturn(){
+        double startValue = chartData.getValues()[0].getOpen();
+        double endValue = chartData.getValues()[chartData.getValues().length-1].getClose();
+
+    }*/
 }

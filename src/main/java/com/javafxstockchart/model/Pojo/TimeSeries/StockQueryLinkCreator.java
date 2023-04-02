@@ -19,12 +19,6 @@ public class StockQueryLinkCreator {
     public static final String TWELVE_DATA_BASE_LINK = "https://api.twelvedata.com/";
 
     public String createLink(String interval, String symbol) {
-        System.out.println(TWELVE_DATA_BASE_LINK +
-                "time_series?" +
-                setSymbol(symbol) +
-                setInterval(interval) +
-                setOutputSize() +
-                setApiKey());
         return TWELVE_DATA_BASE_LINK +
                 "time_series?" +
                 setSymbol(symbol) +

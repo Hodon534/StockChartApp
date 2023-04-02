@@ -12,6 +12,9 @@ import java.sql.DriverManager;
  */
 public class DatabaseConnection {
 
+    /**
+     * Connect to the database
+     */
     public static Connection getConnection(){
         try {
             return DriverManager.getConnection("jdbc:mysql://localhost:3306/companies", "Hodon","Root1234" );

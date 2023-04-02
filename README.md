@@ -15,3 +15,4 @@ After selecting the company, the appropriate interval and pressing the button - 
 ---
 Update : 
 - Tests have been added
+---
