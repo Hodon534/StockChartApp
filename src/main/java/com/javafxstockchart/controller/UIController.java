@@ -43,8 +43,6 @@ public class UIController implements Initializable {
     @FXML
     private ChoiceBox<String> intervalChoiceBox;
     @FXML
-    private ChoiceBox<String> periodChoiceBox;
-    @FXML
     private GridPane gridPane;
     @FXML
     private Label labelRateOfReturn;
@@ -65,8 +63,6 @@ public class UIController implements Initializable {
     private final ObservableList<Company> observableList = FXCollections.observableArrayList();
     private PojoTimeSeries chartData;
     private final String[] spanBetweenRecords = {"1day", "1week", "1month"};
-    private final String[] periodOfQueries = {"Max", "10 years", "5 years", "3 years", "1 year", "YTD"};
-
     @Autowired
     OracleFromYamaha oracleFromYamaha;
 
@@ -76,16 +72,8 @@ public class UIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         intervalChoiceBoxInitialization();
-        /*periodChoiceBoxInitialization();*/
         lineChartInitialization();
         tableViewInitialization();
-        /*companyTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Company>() {
-            @Override
-            public void changed(ObservableValue<? extends Company> observableValue, Company company, Company t1) {
-                String clickedCompanySymbol = companyTableView.getSelectionModel().getSelectedItem().getSymbol();
-                textField.setText(clickedCompanySymbol);
-            }
-        });*/
     }
 
     private void tableViewInitialization(){
@@ -139,11 +127,6 @@ public class UIController implements Initializable {
         intervalChoiceBox.setValue("1week");
     }
 
-    /*private void periodChoiceBoxInitialization() {
-        periodChoiceBox.getItems().addAll(periodOfQueries);
-        periodChoiceBox.setValue("Max");
-    }*/
-
     private void lineChartInitialization() {
         lineChart.setCreateSymbols(false);
         lineChart.setLegendVisible(false);
@@ -189,19 +172,11 @@ public class UIController implements Initializable {
         }
 
     public void setAxisLineChart(){
-
-        //Double minValue = 0.0;
-        //Value biggestValue = Arrays.stream(chartData.getValues()).max(Comparator.comparingDouble(Value::getClose)).orElseThrow(NoSuchElementException::new);
-        //Double maxValue = biggestValue.getClose() + (biggestValue.getClose()*0.15);
-        //int ySeparator = (int) (maxValue/7);
-
-        //CategoryAxis xAxis = new CategoryAxis();
-        //NumberAxis yAxis = new NumberAxis(minValue, maxValue, ySeparator);
-        //xAxis.setTickLabelsVisible(false);
         lineChart.getXAxis().setTickLabelsVisible(false);
         lineChart.getXAxis().setOpacity(0);
         lineChart.getData().add(setXYChart());
     }
+
     public void resetChartDataAndLineChart(){
         chartData = new PojoTimeSeries();
         lineChart.getData().clear();
@@ -211,6 +186,7 @@ public class UIController implements Initializable {
         changeTextValueOfYamahaDecisionLabel();
         changeColorOfYamahaDecisionLabel();
         }
+
     public void changeTextValueOfYamahaDecisionLabel() {
         oracleFromYamaha.setDecisionWhetherBuyOrSell();
         if (oracleFromYamaha.toString().equals("BUY")) {
