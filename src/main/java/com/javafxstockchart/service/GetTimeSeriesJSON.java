@@ -15,7 +15,6 @@ import java.util.Scanner;
 /**
  * Make a request from TwelveData and return POJO object of Time Series
  */
-@RestController
 public class GetTimeSeriesJSON {
 
     public static PojoTimeSeries requestData(String interval, String symbol) throws IOException {
