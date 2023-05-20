@@ -6,7 +6,8 @@ Stock Chart App
 
 The application contains a list of companies from NASDAQ, whose symbols and names are retrieved from a local MySQL database.
 
-![](https://i.postimg.cc/YCL7fFmd/stochchartapp-2.png)
+
+<img height="400" src="https://i.postimg.cc/YCL7fFmd/stochchartapp-2.png"/>
 
 After selecting the company, the appropriate interval and pressing the button - the data is downloaded using the api from TwelveData website (https://twelvedata.com/) and then displayed on a line chart.
 
@@ -19,4 +20,5 @@ Update :
 - Tests have been added
 ---
 
-![](https://i.postimg.cc/q7fTm7s4/stockchartapp.png)
+
+<img height="600" src="https://i.postimg.cc/q7fTm7s4/stockchartapp.png"/>
